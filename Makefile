@@ -1,4 +1,4 @@
-APPLICATION      := iam-role-annotator
+APPLICATION      := serf-publisher
 LINUX            := build/${APPLICATION}-linux-amd64
 DARWIN           := build/${APPLICATION}-darwin-amd64
 DOCKER_USER      ?= ""
@@ -44,7 +44,7 @@ coverage: $(COVER) lint
 release: $(LINUX)
 	echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
 	docker build -t "${DOCKER_IMAGE}" "."
-	docker tag "${DOCKER_IMAGE}" "${DOCKER_IMAGE}:${TRAVIS_COMMIT}"
+	docker tag "${DOCKER_USER}/""${DOCKER_IMAGE}" "${DOCKER_IMAGE}:0.1.0"
 	docker push "${DOCKER_IMAGE}"
 
 e2e:

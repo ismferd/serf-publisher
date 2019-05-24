@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: serf-publisher
+  labels:
+    app: serf-publisher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: serf-publisher
+  template:
+    metadata:
+      labels:
+        app: serf-publisher
+    spec:
+      containers:
+        - name: serf-publisher
+          image: serf-publisher:0.1.0

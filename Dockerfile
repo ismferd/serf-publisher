@@ -8,4 +8,4 @@ RUN apk --no-cache add tini=0.16.1-r0
 
 ENTRYPOINT ["/sbin/tini", "--", "./serf-publisher"]
 
-COPY build/iam-role-annotator-linux-amd64 iam-role-annotator
+COPY build/serf-publisher-linux-amd64 serf-publisher

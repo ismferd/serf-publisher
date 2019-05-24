@@ -13,7 +13,7 @@ import (
 
 	"k8s.io/client-go/util/homedir"
 
-	"github.com/fiunchinho/iam-role-annotator/pkg"
+	"github.com/ismferd/serf-publisher/pkg"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"github.com/spotahome/kooper/operator/controller"
@@ -33,7 +33,7 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "iam-role-annotator",
+	Use:   "serf-publisher",
 	Short: "Kubernetes controller that automatically adds annotations in Pods to they can assume AWS Roles.",
 	Long:  `Kubernetes controller that automatically adds annotations in Pods to they can assume AWS Roles.`,
 	Run: func(cmd *cobra.Command, args []string) {

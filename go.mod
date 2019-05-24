@@ -1,4 +1,4 @@
-module github.com/fiunchinho/iam-role-annotator
+module github.com/ismferd/serf-publisher
 
 go 1.12
 
