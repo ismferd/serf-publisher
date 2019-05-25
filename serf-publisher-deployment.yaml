@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: serf-publisher
@@ -16,4 +16,7 @@ spec:
     spec:
       containers:
         - name: serf-publisher
-          image: serf-publisher:0.1.0
+          image: ismaelfm/serf-publisher-arm:0.1.0
+          env:
+          - name: NAMESPACE
+            value: cloudy
