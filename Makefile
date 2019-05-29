@@ -1,6 +1,7 @@
 APPLICATION      := serf-publisher
 LINUX            := build/${APPLICATION}-linux-amd64
 DARWIN           := build/${APPLICATION}-darwin-amd64
+ARM              := build/${APPLICATION}-arm						
 DOCKER_USER      ?= ""
 DOCKER_PASS      ?= ""
 BIN_DIR          := $(GOPATH)/bin
@@ -14,34 +15,16 @@ TRAVIS_COMMIT    ?= latest
 $(DARWIN):
 	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -a -installsuffix cgo -o ${DARWIN} *.go
 
-.PHONY: $(LINUX)
-$(LINUX):
+.PHONY: linux
+linux:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o ${LINUX} *.go
 
-$(GOMETALINTER):
-	go get github.com/golangci/golangci-lint/cmd/golangci-lint@v1.16.0
-
-$(COVER):
-	go get -u github.com/axw/gocov/gocov
-	go get -u github.com/AlekSi/gocov-xml
-
-$(JUNITREPORT):
-	go get -u github.com/jstemmer/go-junit-report
-
-.PHONY: lint
-lint: $(GOMETALINTER)
-	golangci-lint run --disable errcheck
-
-.PHONY: test
-test: $(JUNITREPORT)
-	go test -v -cover ./... | tee /dev/tty | go-junit-report > junit-report.xml
-
-.PHONY: coverage
-coverage: $(COVER) lint
-	./coverage
-
+.PHONY: arm
+arm:
+	CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 go build -a -installsuffix cgo -o ${ARM} *.go
+	
 .PHONY: release
-release: $(LINUX)
+release:
 	echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
 	docker build -t "${DOCKER_IMAGE}" "."
 	docker tag "${DOCKER_USER}/""${DOCKER_IMAGE}" "${DOCKER_IMAGE}:0.1.0"

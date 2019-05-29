@@ -16,7 +16,28 @@ spec:
     spec:
       containers:
         - name: serf-publisher
-          image: ismaelfm/serf-publisher-arm:0.1.0
+          image: ismaelfm/serf-publisher-arm:0.1.4
           env:
           - name: NAMESPACE
             value: cloudy
+          volumeMounts:
+            - mountPath: /usr/sbin
+              name: test-volume
+            - mountPath: /usr/share
+              name: error-volume
+            - mountPath: /opt
+              name: opt-volume
+      volumes:
+        - name: test-volume
+          hostPath:
+            path: /usr/sbin
+            type: Directory
+        - name: error-volume
+          hostPath:
+            path: /usr/share
+            type: Directory
+        - name: opt-volume
+          hostPath:
+            path: /opt
+            type: Directory
+
