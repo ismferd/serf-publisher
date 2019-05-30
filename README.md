@@ -1,6 +1,6 @@
-# serf-publisher
+## Serf-Publisher
 
-This controller expose your application throught Serf.
+This k8s controller expose your application throught Serf.
 
 # Generation of binary
 
