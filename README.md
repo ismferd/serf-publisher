@@ -13,5 +13,5 @@ make (arm|linux)
 make release
 ```
 
-**NOTE:
+**NOTE:**
 This project is purely academic.
