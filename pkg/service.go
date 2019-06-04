@@ -29,7 +29,7 @@ func NewSerfPublisher(k8sCli kubernetes.Interface, logger Logger) *SerfPublisher
 // Publish will add a new service trhought serf
 func (s *SerfPublisher) Publish(service v1.Service) (v1.Service, error) {
 	newService := service.DeepCopy()
-	cmd := exec.Command("/usr/sbin/avahi-ps", "publish", newService.ObjectMeta.Name, newService.ObjectMeta.Name, strconv.Itoa(int(newService.Spec.Ports[0].NodePort)), string(newService.Spec.Type))
+	cmd := exec.Command("/usr/sbin/avahi-ps", "publish", newService.ObjectMeta.Name, "kubernetes", strconv.Itoa(int(newService.Spec.Ports[0].NodePort)), string(newService.Spec.Type))
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		s.logger.Infof("cmd.Run() failed with %s\n", err)
