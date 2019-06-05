@@ -17,8 +17,9 @@ func (h *Handler) Add(obj runtime.Object) error {
 }
 
 // Delete is called when a k8s object is deleted.
-func (h *Handler) Delete(s string) error {
-	return nil
+func (h *Handler) Delete(obj runtime.Object) error {
+	_, err := h.serfPublisher.Unpublish(*obj.(*v1.Service))
+	return err
 }
 
 // NewHandler returns a new Handler to handle Deployments created/updated/deleted.
