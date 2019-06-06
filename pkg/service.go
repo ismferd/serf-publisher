@@ -2,15 +2,16 @@ package pkg
 
 import (
 	v1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"os/exec"
-  "strconv"
+	"strconv"
 )
 
 // SerfPublisherInterface for the SerfPublisher
 type SerfPublisherInterface interface {
 	Publish(service v1.Service) (v1.Service, error)
-	Unpublish(service v1.Service) (v1.Service, error)
+	Unpublish(name string) error
 }
 
 // SerfPublisher is simple annotator service.
@@ -39,14 +40,16 @@ func (s *SerfPublisher) Publish(service v1.Service) (v1.Service, error) {
 	return *newService, nil
 }
 
-// Publish will add a new service trhought serf
-func (s *SerfPublisher) Unpublish(service v1.Service) (v1.Service, error) {
-	newService := service.DeepCopy()
+// UnPublish will add a new service trhought serf
+func (s *SerfPublisher) Unpublish(name string) error {
+	options := metav1.GetOptions{}
+	newService, _ := s.client.CoreV1().Services("cloudy").Get(name, options)
+
 	cmd := exec.Command("/usr/sbin/avahi-ps", "unpublish", "kubernetes", strconv.Itoa(int(newService.Spec.Ports[0].NodePort)))
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		s.logger.Infof("cmd.Run() failed with %s\n", err)
 	}
 	s.logger.Infof("command \n%s\n", out)
-	return *newService, nil
+	return err
 }
