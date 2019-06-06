@@ -44,12 +44,12 @@ func (s *SerfPublisher) Publish(service v1.Service) (v1.Service, error) {
 func (s *SerfPublisher) Unpublish(name string) error {
 	options := metav1.GetOptions{}
 	newService, _ := s.client.CoreV1().Services("cloudy").Get(name, options)
-
-	cmd := exec.Command("/usr/sbin/avahi-ps", "unpublish", "kubernetes", strconv.Itoa(int(newService.Spec.Ports[0].NodePort)))
+	s.logger.Infof("delete %s\n", newService.Name)
+	/*cmd := exec.Command("/usr/sbin/avahi-ps", "unpublish", "kubernetes", strconv.Itoa(int(newService.Spec.Ports[0].NodePort)))
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		s.logger.Infof("cmd.Run() failed with %s\n", err)
 	}
-	s.logger.Infof("command \n%s\n", out)
-	return err
+	s.logger.Infof("command \n%s\n", out)*/
+	return nil
 }
