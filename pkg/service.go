@@ -1,23 +1,26 @@
 package pkg
 
 import (
-	v1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"errors"
+	"k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/cache"
 	"os/exec"
 	"strconv"
+	"sync"
 )
 
 // SerfPublisherInterface for the SerfPublisher
 type SerfPublisherInterface interface {
 	Publish(service v1.Service) (v1.Service, error)
-	Unpublish(name string) error
+	Unpublish(key string) (v1.Service, error)
 }
 
 // SerfPublisher is simple annotator service.
 type SerfPublisher struct {
 	client kubernetes.Interface
 	logger Logger
+	reg    sync.Map
 }
 
 // NewSerfPublisher returns a new SerfPublisher.
@@ -25,6 +28,7 @@ func NewSerfPublisher(k8sCli kubernetes.Interface, logger Logger) *SerfPublisher
 	return &SerfPublisher{
 		client: k8sCli,
 		logger: logger,
+		reg:    sync.Map{},
 	}
 }
 
@@ -37,19 +41,26 @@ func (s *SerfPublisher) Publish(service v1.Service) (v1.Service, error) {
 		s.logger.Infof("cmd.Run() failed with %s\n", err)
 	}
 	s.logger.Infof("command \n%s\n", out)
+	s.reg.Store(newService.Name, newService)
 	return *newService, nil
 }
 
-// UnPublish will add a new service trhought serf
-func (s *SerfPublisher) Unpublish(name string) error {
-	options := metav1.GetOptions{}
-	newService, _ := s.client.CoreV1().Services("cloudy").Get(name, options)
-	s.logger.Infof("delete %s\n", newService.Name)
-	/*cmd := exec.Command("/usr/sbin/avahi-ps", "unpublish", "kubernetes", strconv.Itoa(int(newService.Spec.Ports[0].NodePort)))
+// Publish will add a new service trhought serf
+func (s *SerfPublisher) Unpublish(key string) (v1.Service, error) {
+	_, serviceName, err := cache.SplitMetaNamespaceKey(key)
+	if err != nil {
+		return v1.Service{}, errors.New("can't split namespace and name")
+	}
+	svc, ok := s.reg.Load(serviceName)
+	if !ok {
+		return v1.Service{}, errors.New("unknown deleted object")
+	}
+	newService := svc.(*v1.Service)
+	cmd := exec.Command("/usr/sbin/avahi-ps", "unpublish", "kubernetes", strconv.Itoa(int(newService.Spec.Ports[0].NodePort)))
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		s.logger.Infof("cmd.Run() failed with %s\n", err)
 	}
-	s.logger.Infof("command \n%s\n", out)*/
-	return nil
+	s.logger.Infof("command \n%s\n", out)
+	return *newService, nil
 }

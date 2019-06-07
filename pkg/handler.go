@@ -18,7 +18,7 @@ func (h *Handler) Add(obj runtime.Object) error {
 
 // Delete is called when a k8s object is deleted.
 func (h *Handler) Delete(name string) error {
-	err := h.serfPublisher.Unpublish(name)
+	_, err := h.serfPublisher.Unpublish(name)
 	return err
 }
 
