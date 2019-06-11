@@ -45,7 +45,7 @@ func (s *SerfPublisher) Publish(service v1.Service) (v1.Service, error) {
 	return *newService, nil
 }
 
-// Publish will add a new service trhought serf
+// UnPublish will add a new service trhought serf
 func (s *SerfPublisher) Unpublish(key string) (v1.Service, error) {
 	_, serviceName, err := cache.SplitMetaNamespaceKey(key)
 	if err != nil {
