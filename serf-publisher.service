@@ -1,0 +1,8 @@
+[Unit]
+Description=Serf Publisher Service
+After=kubelet.service
+
+[Service]
+Type=simple
+ExecStart=your_binary_with_absolute_path --namespace your_namespace --kubeconfig your_kube_config_file
+Restart=on-failure
