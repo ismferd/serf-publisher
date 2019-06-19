@@ -3,7 +3,7 @@
 This k8s controller expose your application throught Serf.
 
 
-# Dependecies
+# Dependencies
 
 You will need install GO, in order to build the project
 
