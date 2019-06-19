@@ -7,7 +7,7 @@ This k8s controller expose your application throught Serf.
 
 You will need install GO, in order to build the project
 
-You can follow (this guide)[https://golang.org/doc/install]
+You can follow [this guide](https://golang.org/doc/install)
 
 then do: `export PATH=$PATH:/usr/local/go/bin`
 
