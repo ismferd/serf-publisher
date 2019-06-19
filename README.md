@@ -26,11 +26,18 @@ Before released it, you must ensure the version of your binary which will pushed
 make release
 ```
 
+# Run 
 
+1- Copy your binary to master node.
 
-In order to run this operator you could deploy it using the [manifest](serf-publisher-deployment.yaml)
+2- Just run the next command in the master node:
+```sh
+./serf-publisher --namespace your_namespace --kubeconfig your_kube_config_file
+```
 
 Or copy your binary to your master Kubernetes node and create an [unit](serf-publisher.service).
+
+3- Create your service as NodePort
 
 **NOTE:**
 This project is purely academic.
